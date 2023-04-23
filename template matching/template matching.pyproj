@@ -23,6 +23,28 @@
   <ItemGroup>
     <Compile Include="template_matching.py" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="cards\" />
+    <Folder Include="symbols\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="cards\card_1.jpg" />
+    <Content Include="cards\card_2.jpg" />
+    <Content Include="symbols\apple.png" />
+    <Content Include="symbols\bottle.png" />
+    <Content Include="symbols\candle.png" />
+    <Content Include="symbols\clock.png" />
+    <Content Include="symbols\dinosaur.png" />
+    <Content Include="symbols\dog.png" />
+    <Content Include="symbols\exclamation mark.png" />
+    <Content Include="symbols\fire.png" />
+    <Content Include="symbols\lightning.png" />
+    <Content Include="symbols\musical note.png" />
+    <Content Include="symbols\question mark.png" />
+    <Content Include="symbols\sun.png" />
+    <Content Include="symbols\target.png" />
+    <Content Include="symbols\water.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
        Visual Studio and specify your pre- and post-build commands in
