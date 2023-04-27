@@ -43,9 +43,9 @@ for i, card_desc in enumerate(card_descs):
 # Find symbol that appears in both cards
 symbol_count = [0] * len(symbol_files)
 for match in matches:
-    if match[0] == 0 and match[1] != 12:  # Only consider matches with card 1 and not the water symbol
+    if match[0] == 0:  # Only consider matches with card 1 
         symbol_count[match[1]] += 1
-    elif match[0] == 1 and match[1] != 12:  # Only consider matches with card 2 and not the water symbol
+    elif match[0] == 1:  # Only consider matches with card 2 
         symbol_count[match[1]] += 1
 
 matching_symbol_idx = symbol_count.index(2)  # Find the symbol that appears in both cards
