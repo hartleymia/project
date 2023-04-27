@@ -84,24 +84,3 @@ for i in range(len(card_preprocessed)):
         # Show image
         cv2.imshow("Matches", img_matches)
         cv2.waitKey(0)
-for i, card_desc in enumerate(card_descs):
-    for j, symbol_desc in enumerate(symbol_descs):
-        bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-        match = bf.match(card_desc, symbol_desc)
-        match = sorted(match, key=lambda x:x.distance)
-        matches.append((i, j, match))
-
-# Find symbol that appears in both cards
-symbol_count = [0] * len(symbol_files)
-for match in matches:
-    if match[0] == 0:  # Only consider matches with card 1 
-        symbol_count[match[1]] += 1
-    elif match[0] == 1:  # Only consider matches with card 2 
-        symbol_count[match[1]] += 1
-
-matching_symbol_idx = symbol_count.index(2)  # Find the symbol that appears in both cards
-matching_symbol_file = symbol_files[matching_symbol_idx]
-matching_symbol_image = Image.open(matching_symbol_file)
-
-print("Matching symbol found:", matching_symbol_file)
-matching_symbol_image.show()
