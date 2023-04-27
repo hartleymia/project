@@ -9,7 +9,8 @@ moving forward need to:
   ```diff
 + DONE
 ```
+
 2. add in abit to give a visualisation of how the matching works (the grey bit with all the lines)
-3. ```diff
+  ```diff
 - NEEDS COMPLETING BY THE END OF 27/04/23
 ```
