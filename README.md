@@ -2,9 +2,7 @@
 
 ### 23/04/2023
 
-the code can now determine matches, however it lists the 1st symbol in the list as the match
-
-moving forward need to:
+PLAN:
 1. have the program determine the symbol that matches both of the cards.    
   ```diff
 + DONE
