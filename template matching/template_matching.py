@@ -75,6 +75,10 @@ def find_matching_symbol(matches, symbol_files):
     matching_symbol_idx = symbol_count.index(2)
     matching_symbol_file = symbol_files[matching_symbol_idx]
     matching_symbol_image = cv2.imread(matching_symbol_file)
+    # print the name of the symbol that appears in both cards
+    print("Matching symbol found:", matching_symbol_file)
+    # show the image of the symbol that appears in both cards
+    cv2.imshow("Matching symbol", matching_symbol_image) 
     return matching_symbol_file, matching_symbol_image
 
 # function to perform template matching with ORB 
@@ -117,12 +121,6 @@ matches = find_matches(card_descs, symbol_descs)
 
 # call on the find_matching_symbol_function
 matching_symbol_file, matching_symbol_image = find_matching_symbol(matches, symbol_files)
-
-# print the name of the symbol that appears in both cards
-print("Matching symbol found:", matching_symbol_file) 
-
-# show the image of the symbol that appears in both cards
-cv2.imshow("Matching symbol", matching_symbol_image) 
 
 # call the perform_template_matching function
 for i in range(len(card_preprocessed)):
