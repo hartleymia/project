@@ -19,7 +19,7 @@ def load_images(file_list):
             images.append(image)
     return images
 
-# function to convert symbol images to grayscale and find keypoints and descriptors
+# function to preprocess the card images
 def preprocess_card_images(card_images):
     preprocessed_images = []
     for card_image in card_images:
