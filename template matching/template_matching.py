@@ -21,16 +21,32 @@ def load_images(file_list):
 
 # function to preprocess the card images
 def preprocess_card_images(card_images):
-    preprocessed_images = []
+    preprocessed_card_images = []
     for card_image in card_images:
         # Resize to a uniform size
         card_image = cv2.resize(card_image, (400, 400))
-        # Convert to grayscale
-        card_image_gray = cv2.cvtColor(card_image, cv2.COLOR_BGR2GRAY)
+        # Convert to grescale
+        card_image_grey = cv2.cvtColor(card_image, cv2.COLOR_BGR2GRAY)
         # Apply Gaussian blur to remove noise
-        card_image_gray = cv2.GaussianBlur(card_image_gray, (5, 5), 0)
-        preprocessed_images.append(card_image_gray)
-    return preprocessed_images
+        card_image_grey = cv2.GaussianBlur(card_image_grey, (5, 5), 0)
+        card_image_edges = cv2.Canny(card_image_grey, 100, 200)
+        preprocessed_card_images.append(card_image_edges)
+        #preprocessed_card_images.append(card_image_grey)
+    return preprocessed_card_images
+
+def preprocess_symbol_images(symbol_images):
+    preprocess_symbol_images = []
+    for symbol_image in symbol_images:
+        #resize to uniform size
+        symbol_image = cv2.resize(symbol_image, (400,400))
+        #convert to greyscale
+        symbol_image_grey = cv2.cvtColor(symbol_image, cv2.COLOR_BGR2GRAY)
+        #apply gaussian blur to remove noise
+        symbol_image_grey = cv2.GaussianBlur(symbol_image_grey, (5,5), 0)
+        symbol_image_edges = cv2.Canny(symbol_image_grey, 100, 200)
+        preprocess_symbol_images.append(symbol_image_edges)
+        #preprocess_symbol_images.append(symbol_image_grey)
+    return preprocess_symbol_images
 
 # function to convert symbol images to grayscale and find keypoints and descriptors
 def detect_symbols(symbol_images):
