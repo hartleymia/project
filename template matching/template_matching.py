@@ -49,12 +49,12 @@ def preprocess_symbol_images(symbol_images):
     return preprocess_symbol_images
 
 # function to convert symbol images to grayscale and find keypoints and descriptors
-def detect_symbols(symbol_images):
+def detect_symbols(symbol_preprocessed):
     symbol_kps = []
     symbol_descs = []
-    for symbol_image in symbol_images:
-        symbol_gray = cv2.cvtColor(symbol_image, cv2.COLOR_BGR2GRAY)
-        kp, desc = orb.detectAndCompute(symbol_gray, None)
+    for symbol_image in symbol_preprocessed:
+        #symbol_gray = cv2.cvtColor(symbol_image, cv2.COLOR_BGR2GRAY)
+        kp, desc = orb.detectAndCompute(symbol_image, None)
         symbol_kps.append(kp)
         symbol_descs.append(desc)
     return symbol_kps, symbol_descs
@@ -123,11 +123,14 @@ symbol_images = load_images(symbol_files)
 # call on the preprocess_card_images function
 card_preprocessed = preprocess_card_images(card_images)
 
+# call on the preprocess_symbol_images function
+symbol_preprocessed = preprocess_symbol_images(symbol_images)
+
 # define ORB detector
 orb = cv2.ORB_create()
 
 # call the detect_symbols function
-symbol_kps, symbol_descs = detect_symbols(symbol_images)
+symbol_kps, symbol_descs = detect_symbols(symbol_preprocessed)
 
 # call on the detect_cards function
 card_kps, card_descs = detect_cards(card_preprocessed)
@@ -140,5 +143,5 @@ matching_symbol_file, matching_symbol_image = find_matching_symbol(matches, symb
 
 # call the perform_template_matching function
 for i in range(len(card_preprocessed)):
-    for j in range(len(symbol_images)):
-        img_matches = perform_template_matching(card_preprocessed[i], symbol_images[j])
+    for j in range(len(symbol_preprocessed)):
+        img_matches = perform_template_matching(card_preprocessed[i], symbol_preprocessed[j])
