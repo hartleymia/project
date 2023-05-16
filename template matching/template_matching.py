@@ -3,6 +3,7 @@
 # By Mia Hartley 25179600 <25179600@students.lincoln.ac.uk> 
 
 import cv2
+import time
 
 #function to load the images
 def load_images(file_list):
@@ -110,9 +111,6 @@ def perform_template_matching(card_image, symbol_image):
     cv2.waitKey(0)
     return img_matches
 
-# load card images by calling the load_images function
-card_files = ["cards/card_1.jpg", "cards/card_2.jpg"]
-card_images = load_images(card_files)
 
 # load symbol images by calling the load_images function
 symbol_files = ["symbols/candle.png", "symbols/dog.png", "symbols/water.png", "symbols/sun.png", 
@@ -120,6 +118,13 @@ symbol_files = ["symbols/candle.png", "symbols/dog.png", "symbols/water.png", "s
                 "symbols/bottle.png", "symbols/musical note.png", "symbols/question mark.png", "symbols/dinosaur.png", 
                 "symbols/exclamation mark.png", "symbols/apple.png", "symbols/hand.png"]
 symbol_images = load_images(symbol_files)
+
+# start time - in seconds
+start = time.perf_counter()
+
+# load card images by calling the load_images function
+card_files = ["cards/card_1.jpg", "cards/card_2.jpg"]
+card_images = load_images(card_files)
 
 # call on the preprocess_card_images function
 card_preprocessed = preprocess_card_images(card_images)
@@ -141,6 +146,13 @@ matches = find_matches(card_descs, symbol_descs)
 
 # call on the find_matching_symbol_function
 matching_symbol_file, matching_symbol_image = find_matching_symbol(matches, symbol_files)
+
+# end time - in seconds
+end = time.perf_counter()
+
+# print time it takes to match symbol in seconds
+total = end - start
+print(f"time to find matching symbol: {total:0.4f} seconds")
 
 # call the perform_template_matching function
 for i in range(len(card_preprocessed)):
