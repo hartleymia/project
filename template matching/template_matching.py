@@ -24,7 +24,7 @@ def preprocess_card_images(card_images):
     preprocessed_card_images = []
     for card_image in card_images:
         # Resize to a uniform size
-        card_image = cv2.resize(card_image, (400, 400))
+        card_image = cv2.resize(card_image, (600, 600))
         # Convert to grescale
         card_image_grey = cv2.cvtColor(card_image, cv2.COLOR_BGR2GRAY)
         # Apply Gaussian blur to remove noise
@@ -74,10 +74,11 @@ def find_matches(card_descs, symbol_descs):
     matches = []
     for i, card_desc in enumerate(card_descs):
         for j, symbol_desc in enumerate(symbol_descs):
-            bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+            bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=False)
             match = bf.match(card_desc, symbol_desc)
             match = sorted(match, key=lambda x:x.distance)
-            matches.append((i, j, match))
+            if match[0].distance < 8:
+                matches.append((i, j, match))
     return matches
 
 # function to find symbol that appears in both cards
@@ -97,14 +98,14 @@ def find_matching_symbol(matches, symbol_files):
     cv2.imshow("Matching symbol", matching_symbol_image) 
     return matching_symbol_file, matching_symbol_image
 
-# function to perform template matching with ORB 
+# function to perform feature based template matching with ORB 
 def perform_template_matching(card_image, symbol_image):
     matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING)
     kp1, des1 = orb.detectAndCompute(symbol_image, None)
     kp2, des2 = orb.detectAndCompute(card_image, None)
     matches = matcher.match(des1, des2)
     matches = sorted(matches, key=lambda x: x.distance)
-    img_matches = cv2.drawMatches(symbol_image, kp1, card_image, kp2, matches[:10], None)
+    img_matches = cv2.drawMatches(symbol_image, kp1, card_image, kp2, matches[:20], None)
     cv2.imshow("Matches", img_matches)
     cv2.waitKey(0)
     return img_matches
@@ -114,10 +115,10 @@ card_files = ["cards/card_1.jpg", "cards/card_2.jpg"]
 card_images = load_images(card_files)
 
 # load symbol images by calling the load_images function
-symbol_files = ["symbols/clock.png", "symbols/dog.png", "symbols/water.png", "symbols/sun.png", 
-                "symbols/candle.png", "symbols/target.png", "symbols/fire.png", "symbols/lightning.png", 
+symbol_files = ["symbols/candle.png", "symbols/dog.png", "symbols/water.png", "symbols/sun.png", 
+                "symbols/clock.png", "symbols/target.png", "symbols/fire.png", "symbols/lightning.png", 
                 "symbols/bottle.png", "symbols/musical note.png", "symbols/question mark.png", "symbols/dinosaur.png", 
-                "symbols/exclamation mark.png", "symbols/apple.png"]
+                "symbols/exclamation mark.png", "symbols/apple.png", "symbols/hand.png"]
 symbol_images = load_images(symbol_files)
 
 # call on the preprocess_card_images function
