@@ -24,15 +24,17 @@ def load_images(file_list):
 def preprocess_card_images(card_images):
     preprocessed_card_images = []
     for card_image in card_images:
-        # Resize to a uniform size
+        #resize to a uniform size
         card_image = cv2.resize(card_image, (600, 600))
-        # Convert to grescale
+        #convert to grescale
         card_image_grey = cv2.cvtColor(card_image, cv2.COLOR_BGR2GRAY)
-        # Apply Gaussian blur to remove noise
+        #apply histogram equalization
+        #card_image_grey = cv2.equalizeHist(card_image_grey)
+        #apply Gaussian blur to remove noise
         card_image_grey = cv2.GaussianBlur(card_image_grey, (5, 5), 0)
+        #use canny to detect image edges
         card_image_edges = cv2.Canny(card_image_grey, 100, 200)
         preprocessed_card_images.append(card_image_edges)
-        #preprocessed_card_images.append(card_image_grey)
     return preprocessed_card_images
 
 def preprocess_symbol_images(symbol_images):
@@ -42,11 +44,13 @@ def preprocess_symbol_images(symbol_images):
         symbol_image = cv2.resize(symbol_image, (400,400))
         #convert to greyscale
         symbol_image_grey = cv2.cvtColor(symbol_image, cv2.COLOR_BGR2GRAY)
+        #apply histogram equalization
+        #symbol_image_grey = cv2.equalizeHist(symbol_image_grey)
         #apply gaussian blur to remove noise
         symbol_image_grey = cv2.GaussianBlur(symbol_image_grey, (5,5), 0)
+        #use canny to detect image edges
         symbol_image_edges = cv2.Canny(symbol_image_grey, 100, 200)
         preprocess_symbol_images.append(symbol_image_edges)
-        #preprocess_symbol_images.append(symbol_image_grey)
     return preprocess_symbol_images
 
 # function to convert symbol images to grayscale and find keypoints and descriptors
@@ -68,7 +72,7 @@ def detect_cards(card_preprocessed):
         kp, desc = orb.detectAndCompute(card_image, None)
         card_kps.append(kp)
         card_descs.append(desc)
-    return card_kps, card_descs
+    return card_descs
 
 # function to find matches between symbols and cards
 def find_matches(card_descs, symbol_descs):
@@ -93,11 +97,11 @@ def find_matching_symbol(matches, symbol_files):
     matching_symbol_idx = symbol_count.index(2)
     matching_symbol_file = symbol_files[matching_symbol_idx]
     matching_symbol_image = cv2.imread(matching_symbol_file)
-    # print the name of the symbol that appears in both cards
+    #print the name of the symbol that appears in both cards
     print("Matching symbol found:", matching_symbol_file)
-    # show the image of the symbol that appears in both cards
+    #show the image of the symbol that appears in both cards
     cv2.imshow("Matching symbol", matching_symbol_image) 
-    return matching_symbol_file, matching_symbol_image
+    return matching_symbol_idx
 
 # function to perform feature based template matching with ORB 
 def perform_template_matching(card_image, symbol_image):
@@ -111,50 +115,44 @@ def perform_template_matching(card_image, symbol_image):
     cv2.waitKey(0)
     return img_matches
 
+def match_cards(card_files):
+    #start time - in seconds
+    start_time = time.perf_counter()
+    #load card images by calling the load_images function
+    card_images = load_images(card_files)
+    #call on the preprocess_card_images function
+    card_preprocessed = preprocess_card_images(card_images)
+    #call on the detect_cards function
+    card_descs = detect_cards(card_preprocessed)
+    #call on the find_matches function
+    matches = find_matches(card_descs, symbol_descs)
+    #call on the find_matching_symbol_function
+    matching_symbol_idx = find_matching_symbol(matches, symbol_files)
+    #end time - in seconds
+    end_time = time.perf_counter()
+    #print time it takes to match symbol in seconds
+    total_time = end_time - start_time
+    print(f"time to find matching symbol: {total_time:0.4f} seconds")
+    perform_template_matching(card_preprocessed[0], symbol_preprocessed[matching_symbol_idx])
+
+# define ORB detector
+orb = cv2.ORB_create()
 
 # load symbol images by calling the load_images function
 symbol_files = ["symbols/candle.png", "symbols/dog.png", "symbols/water.png", "symbols/sun.png", 
                 "symbols/clock.png", "symbols/target.png", "symbols/fire.png", "symbols/lightning.png", 
                 "symbols/bottle.png", "symbols/musical note.png", "symbols/question mark.png", "symbols/dinosaur.png", 
-                "symbols/exclamation mark.png", "symbols/apple.png", "symbols/hand.png"]
+                "symbols/exclamation mark.png", "symbols/apple.png", "symbols/hand.png", "symbols/scissors.png", 
+                "symbols/light bulb.png", "symbols/anchor.png", "symbols/cactus.png", "symbols/tree.png", "symbols/dragon.png"]
 symbol_images = load_images(symbol_files)
-
-# start time - in seconds
-start = time.perf_counter()
-
-# load card images by calling the load_images function
-card_files = ["cards/card_1.jpg", "cards/card_2.jpg"]
-card_images = load_images(card_files)
-
-# call on the preprocess_card_images function
-card_preprocessed = preprocess_card_images(card_images)
 
 # call on the preprocess_symbol_images function
 symbol_preprocessed = preprocess_symbol_images(symbol_images)
 
-# define ORB detector
-orb = cv2.ORB_create()
-
 # call the detect_symbols function
 symbol_kps, symbol_descs = detect_symbols(symbol_preprocessed)
 
-# call on the detect_cards function
-card_kps, card_descs = detect_cards(card_preprocessed)
-
-# call on the find_matches function
-matches = find_matches(card_descs, symbol_descs)
-
-# call on the find_matching_symbol_function
-matching_symbol_file, matching_symbol_image = find_matching_symbol(matches, symbol_files)
-
-# end time - in seconds
-end = time.perf_counter()
-
-# print time it takes to match symbol in seconds
-total = end - start
-print(f"time to find matching symbol: {total:0.4f} seconds")
-
-# call the perform_template_matching function
-for i in range(len(card_preprocessed)):
-    for j in range(len(symbol_preprocessed)):
-        img_matches = perform_template_matching(card_preprocessed[i], symbol_preprocessed[j])
+match_cards(["cards/card_1.jpg", "cards/card_2.jpg"])
+#match_cards(["cards/card_2.jpg", "cards/card_1.jpg"])
+#match_cards(["cards/card_1.jpg", "cards/card_3.jpg"])
+#match_cards(["cards/card_2.jpg", "cards/card_3.jpg"])
