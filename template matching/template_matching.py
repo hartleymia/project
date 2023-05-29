@@ -58,7 +58,6 @@ def detect_symbols(symbol_preprocessed):
     symbol_kps = []
     symbol_descs = []
     for symbol_image in symbol_preprocessed:
-        #symbol_gray = cv2.cvtColor(symbol_image, cv2.COLOR_BGR2GRAY)
         kp, desc = orb.detectAndCompute(symbol_image, None)
         symbol_kps.append(kp)
         symbol_descs.append(desc)
