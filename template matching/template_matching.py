@@ -28,8 +28,6 @@ def preprocess_card_images(card_images):
         card_image = cv2.resize(card_image, (600, 600))
         #convert to grescale
         card_image_grey = cv2.cvtColor(card_image, cv2.COLOR_BGR2GRAY)
-        #apply histogram equalization
-        #card_image_grey = cv2.equalizeHist(card_image_grey)
         #apply Gaussian blur to remove noise
         card_image_grey = cv2.GaussianBlur(card_image_grey, (5, 5), 0)
         #use canny to detect image edges
@@ -44,8 +42,6 @@ def preprocess_symbol_images(symbol_images):
         symbol_image = cv2.resize(symbol_image, (400,400))
         #convert to greyscale
         symbol_image_grey = cv2.cvtColor(symbol_image, cv2.COLOR_BGR2GRAY)
-        #apply histogram equalization
-        #symbol_image_grey = cv2.equalizeHist(symbol_image_grey)
         #apply gaussian blur to remove noise
         symbol_image_grey = cv2.GaussianBlur(symbol_image_grey, (5,5), 0)
         #use canny to detect image edges
