@@ -35,6 +35,7 @@ def preprocess_card_images(card_images):
         preprocessed_card_images.append(card_image_edges)
     return preprocessed_card_images
 
+# function to preprocesses the symbol images
 def preprocess_symbol_images(symbol_images):
     preprocess_symbol_images = []
     for symbol_image in symbol_images:
@@ -49,7 +50,7 @@ def preprocess_symbol_images(symbol_images):
         preprocess_symbol_images.append(symbol_image_edges)
     return preprocess_symbol_images
 
-# function to convert symbol images to grayscale and find keypoints and descriptors
+# function to find symbol keypoints and descriptors
 def detect_symbols(symbol_preprocessed):
     symbol_kps = []
     symbol_descs = []
@@ -59,7 +60,7 @@ def detect_symbols(symbol_preprocessed):
         symbol_descs.append(desc)
     return symbol_kps, symbol_descs
 
-# function to convert card images to grayscale and find keypoints and descriptors
+# function to find card keypoints and descriptors
 def detect_cards(card_preprocessed):
     card_kps = []
     card_descs = []
@@ -137,8 +138,7 @@ orb = cv2.ORB_create()
 symbol_files = ["symbols/candle.png", "symbols/dog.png", "symbols/water.png", "symbols/sun.png", 
                 "symbols/clock.png", "symbols/target.png", "symbols/fire.png", "symbols/lightning.png", 
                 "symbols/bottle.png", "symbols/musical note.png", "symbols/question mark.png", "symbols/dinosaur.png", 
-                "symbols/exclamation mark.png", "symbols/apple.png", "symbols/hand.png", "symbols/scissors.png", 
-                "symbols/light bulb.png", "symbols/anchor.png", "symbols/cactus.png", "symbols/tree.png", "symbols/dragon.png"]
+                "symbols/exclamation mark.png", "symbols/apple.png", "symbols/hand.png"]
 symbol_images = load_images(symbol_files)
 
 # call on the preprocess_symbol_images function
@@ -147,7 +147,5 @@ symbol_preprocessed = preprocess_symbol_images(symbol_images)
 # call the detect_symbols function
 symbol_kps, symbol_descs = detect_symbols(symbol_preprocessed)
 
+#call the match cards function
 match_cards(["cards/card_1.jpg", "cards/card_2.jpg"])
-#match_cards(["cards/card_2.jpg", "cards/card_1.jpg"])
-#match_cards(["cards/card_1.jpg", "cards/card_3.jpg"])
-#match_cards(["cards/card_2.jpg", "cards/card_3.jpg"])
